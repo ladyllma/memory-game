@@ -104,7 +104,7 @@ header .panel {
   color: #fff;
   font-size: 50px;
   border-radius: 15px;
-  /* transition: all 0.4s ease; */
+  transition: all 0.4s ease;
   animation: fade 0.4s ease-out normal forwards;
   opacity: 0;
 }
