@@ -5,7 +5,7 @@ const resetBtn = document.getElementById('reset-button');
 var timerInterval;
 
 resetBtn.addEventListener('click', () => {
-  stopTimer();
+  restartTimer();
 });
 
 function startTimer() {
@@ -22,10 +22,11 @@ function startTimer() {
   }, 1000);
 }
 
-function stopTimer() {
+function restartTimer() {
   clearInterval(timerInterval);
   timerSeconds.textContent = 0;
   timerMinutes.textContent = 0;
+  startTimer();
 }
 
 startTimer();
