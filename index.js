@@ -7,10 +7,6 @@ var timerInterval;
 
 //Clicking reset button stops timer (continue button to start timer?)
 resetBtn.addEventListener('click', () => {
-<<<<<<< HEAD
-  stopTimer();
-=======
->>>>>>> b8fa15a4c74be00a85c092861b43770b127bb758
   restartTimer();
 });
 
@@ -39,13 +35,7 @@ function restartTimer() {
   clearInterval(timerInterval);
   timerSeconds.textContent = 0;
   timerMinutes.textContent = 0;
-<<<<<<< HEAD
   timerHours.textContent = 0;
-}
-
-function restartTimer() {
-=======
->>>>>>> b8fa15a4c74be00a85c092861b43770b127bb758
   startTimer();
 }
 
