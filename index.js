@@ -8,32 +8,48 @@ const cardIcons = [
   'fa-dragon',
   'fa-cat',
 ];
+// Duplicating the icons
+cardIcons.push(...cardIcons);
 
 const timerMinutes = document.getElementById('minutes');
 const timerSeconds = document.getElementById('seconds');
 const timerHours = document.getElementById('hours');
+const movesCounter = document.getElementById('moves');
 const resetBtn = document.getElementById('reset-button');
 const deck = document.getElementById('deck');
 
 var timerInterval;
+var moves = 0;
+var cardsSelectedCounter = 0;
+var cardsSelected = [];
 //Clicking reset button stops timer (continue button to start timer?)
 resetBtn.addEventListener('click', () => {
-  restartTimer();
+  restartGame();
 });
 
-window.onload = createCards();
+window.onload = startGame();
+
+function startGame() {
+  createCards();
+  startTimer();
+}
+
+function restartGame() {
+  restartTimer();
+  restartMoves();
+  deleteCards();
+  startGame();
+}
 
 function createCards() {
-  // Duplicating the icons
-  cardIcons.push(...cardIcons);
-  // Shuffle randomly the cards icons using Fisher-Yates Algorithm
+  // Shuffle randomly the card icons using Fisher-Yates Algorithm
   for (let i = cardIcons.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * i);
     // Swapping the icons without using a 'temp' variable
     [cardIcons[i], cardIcons[j]] = [cardIcons[j], cardIcons[i]];
   }
 
-  // Iterate the cards icons: creates a card, and adds it to the deck
+  // Iterate the card icons: creates a card and then adds it to the deck
   cardIcons.forEach((cardIcon) => {
     const icon = document.createElement('i');
     icon.className = `fas ${cardIcon}`;
@@ -42,12 +58,38 @@ function createCards() {
     card.className = 'card';
     card.appendChild(icon);
     card.addEventListener('click', () => {
-      // TODO: function to toggle the visibility of the card
-      console.log('Not implemented yet.');
+      card.classList.toggle('flip-card');
+      card.classList.toggle('disabled');
+      increaseMoves(card.firstChild);
     });
 
     deck.appendChild(card);
   });
+}
+
+function increaseMoves(card) {
+  cardsSelected.push(card);
+  cardsSelectedCounter++;
+  if (cardsSelectedCounter == 2) {
+    moves++;
+    movesCounter.textContent = moves;
+    cardsSelectedCounter = 0;
+
+    const [card1, card2] = [cardsSelected[0], cardsSelected[1]];
+    if (card1.classList.toString() !== card2.classList.toString()) {
+      setTimeout(() => {
+        card1.parentNode.classList.toggle('disabled');
+        card1.parentNode.classList.toggle('flip-card');
+        card2.parentNode.classList.toggle('disabled');
+        card2.parentNode.classList.toggle('flip-card');
+      }, 500);
+    }
+    cardsSelected = [];
+  }
+}
+
+function deleteCards() {
+  deck.textContent = '';
 }
 
 function startTimer() {
@@ -76,7 +118,10 @@ function restartTimer() {
   timerSeconds.textContent = 0;
   timerMinutes.textContent = 0;
   timerHours.textContent = 0;
-  startTimer();
 }
 
-startTimer();
+function restartMoves() {
+  cardsSelectedCounter = 0;
+  moves = 0;
+  movesCounter.textContent = moves;
+}

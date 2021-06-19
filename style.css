@@ -1,5 +1,17 @@
 @import url('https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap');
 
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Patrick Hand', sans-serif;
+}
+
+*:before,
+*:after {
+  box-sizing: border-box;
+}
+
 body {
   width: 100%;
   height: 100vh;
@@ -8,7 +20,6 @@ body {
   justify-content: center;
   align-items: center;
   overflow: hidden;
-  font-family: 'Patrick Hand';
   color: #2c3e50;
 }
 
@@ -19,7 +30,8 @@ header {
 }
 
 header h1 {
-  font-size: 36px;
+  font-size: 48px;
+  margin-bottom: 25px;
 }
 
 header .panel {
@@ -73,6 +85,7 @@ main {
   background-color: #ecf0f1;
   border-radius: 15px;
   width: 38%;
+  margin-top: 20px;
 }
 
 main #deck {
@@ -102,7 +115,7 @@ main #deck {
   margin: 0.2rem 0.2rem;
   background-color: #6c5ce7;
   color: #fff;
-  font-size: 50px;
+  font-size: 0px;
   border-radius: 15px;
   transition: all 0.4s ease;
   animation: fade 0.4s ease-out normal forwards;
@@ -111,7 +124,19 @@ main #deck {
 
 .card:hover {
   transform: scale(1.05);
-  box-shadow: 0 0 40px 10px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0 20px 5px rgba(108, 92, 231, 0.3);
+}
+
+#deck .card.flip-card {
+  transform: rotateY(180deg);
+  background-color: #a29bfe;
+  font-size: 50px;
+  backface-visibility: visible;
+  -webkit-backface-visibility: visible;
+}
+
+#deck .card.disabled {
+  pointer-events: none;
 }
 
 #deck .card:nth-of-type(1) {
