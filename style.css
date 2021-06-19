@@ -139,6 +139,10 @@ main #deck {
   pointer-events: none;
 }
 
+#deck .card.matched {
+  background-color: #00cec9;
+}
+
 #deck .card:nth-of-type(1) {
   animation-delay: 0.1s;
 }

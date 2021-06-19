@@ -20,7 +20,6 @@ const deck = document.getElementById('deck');
 
 var timerInterval;
 var moves = 0;
-var cardsSelectedCounter = 0;
 var points = 0;
 var cardsSelected = [];
 //Clicking reset button stops timer (continue button to start timer?)
@@ -69,12 +68,10 @@ function createCards() {
 
 function increaseMoves(card) {
   cardsSelected.push(card);
-  cardsSelectedCounter++;
 
-  if (cardsSelectedCounter == 2) {
+  if (cardsSelected.length == 2) {
     moves++;
     movesCounter.textContent = moves;
-    cardsSelectedCounter = 0;
 
     // Start the timer if it's the first move
     moves == 1 && startTimer();
@@ -89,6 +86,8 @@ function increaseMoves(card) {
         card2.parentNode.classList.toggle('flip-card');
       }, 500);
     } else {
+      card1.parentNode.classList.add('matched');
+      card2.parentNode.classList.toggle('matched');
       points++;
     }
 
@@ -135,6 +134,4 @@ function restartMoves() {
   movesCounter.textContent = moves;
 }
 
-function stopGame() {
-  restartTimer();
-}
+function stopGame() {}
