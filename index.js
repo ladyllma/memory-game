@@ -21,6 +21,7 @@ const deck = document.getElementById('deck');
 var timerInterval;
 var moves = 0;
 var cardsSelectedCounter = 0;
+var points = 0;
 var cardsSelected = [];
 //Clicking reset button stops timer (continue button to start timer?)
 resetBtn.addEventListener('click', () => {
@@ -31,7 +32,6 @@ window.onload = startGame();
 
 function startGame() {
   createCards();
-  startTimer();
 }
 
 function restartGame() {
@@ -70,11 +70,16 @@ function createCards() {
 function increaseMoves(card) {
   cardsSelected.push(card);
   cardsSelectedCounter++;
+
   if (cardsSelectedCounter == 2) {
     moves++;
     movesCounter.textContent = moves;
     cardsSelectedCounter = 0;
 
+    // Start the timer if it's the first move
+    moves == 1 && startTimer();
+
+    // Check if the selected cards have the same icon
     const [card1, card2] = [cardsSelected[0], cardsSelected[1]];
     if (card1.classList.toString() !== card2.classList.toString()) {
       setTimeout(() => {
@@ -83,8 +88,12 @@ function increaseMoves(card) {
         card2.parentNode.classList.toggle('disabled');
         card2.parentNode.classList.toggle('flip-card');
       }, 500);
+    } else {
+      points++;
     }
+
     cardsSelected = [];
+    points == 8 && stopGame();
   }
 }
 
@@ -124,4 +133,8 @@ function restartMoves() {
   cardsSelectedCounter = 0;
   moves = 0;
   movesCounter.textContent = moves;
+}
+
+function stopGame() {
+  restartTimer();
 }
