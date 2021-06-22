@@ -11,17 +11,17 @@ const cardIcons = [
 // Duplicating the icons
 cardIcons.push(...cardIcons);
 
-const timerMinutes = document.getElementById('minutes');
-const timerSeconds = document.getElementById('seconds');
-const timerHours = document.getElementById('hours');
-const movesCounter = document.getElementById('moves');
+const minutesLbl = document.getElementById('minutes');
+const secondsLbl = document.getElementById('seconds');
+const hoursLbl = document.getElementById('hours');
+const movesLbl = document.getElementById('moves');
 const resetBtn = document.getElementById('reset-button');
 const deck = document.getElementById('deck');
 
+var cards = [];
 var timerInterval;
 var moves = 0;
 var points = 0;
-var cardsSelected = [];
 //Clicking reset button stops timer (continue button to start timer?)
 resetBtn.addEventListener('click', () => {
   restartGame();
@@ -48,7 +48,7 @@ function createCards() {
     [cardIcons[i], cardIcons[j]] = [cardIcons[j], cardIcons[i]];
   }
 
-  // Iterate the card icons: creates a card and then adds it to the deck
+  // Iterate the card icons list: creates a card and then adds it to the cards list
   cardIcons.forEach((cardIcon) => {
     const icon = document.createElement('i');
     icon.className = `fas ${cardIcon}`;
@@ -56,48 +56,95 @@ function createCards() {
     const card = document.createElement('li');
     card.className = 'card';
     card.appendChild(icon);
-    card.addEventListener('click', () => {
-      card.classList.toggle('flip-card');
-      card.classList.toggle('disabled');
-      increaseMoves(card.firstChild);
+
+    cards.push({
+      iconName: cardIcon,
+      isMatched: false,
+      isSelected: false,
+      isDisabled: false,
+      node: card,
+      icon: icon,
+    });
+  });
+
+  // Add a click event listener to increase the moves
+  for (const card of cards) {
+    card.node.addEventListener('click', () => {
+      // Flip the card and disable all pointer events
+      card.node.classList.toggle('flip-card');
+      card.node.classList.toggle('disabled');
+      card.isSelected = true;
+      card.isDisabled = true;
+      increaseMoves();
     });
 
-    deck.appendChild(card);
-  });
+    // Add the card to the DOM
+    deck.appendChild(card.node);
+  }
 }
 
-function increaseMoves(card) {
-  cardsSelected.push(card);
+async function increaseMoves() {
+  // Counts how many cards are selected
+  const counter = cards.filter((card) => card.isSelected == true).length;
 
-  if (cardsSelected.length == 2) {
+  // Check if there are two cards selected
+  if (counter == 2) {
+    // Increase the moves
     moves++;
-    movesCounter.textContent = moves;
+    movesLbl.textContent = moves;
 
-    // Start the timer if it's the first move
+    // Start the timer if it is the first move
     moves == 1 && startTimer();
 
-    // Check if the selected cards have the same icon
-    const [card1, card2] = [cardsSelected[0], cardsSelected[1]];
-    if (card1.classList.toString() !== card2.classList.toString()) {
-      setTimeout(() => {
-        card1.parentNode.classList.toggle('disabled');
-        card1.parentNode.classList.toggle('flip-card');
-        card2.parentNode.classList.toggle('disabled');
-        card2.parentNode.classList.toggle('flip-card');
-      }, 500);
-    } else {
-      card1.parentNode.classList.add('matched');
-      card2.parentNode.classList.toggle('matched');
-      points++;
-    }
+    // Disable all pointer events of all the
+    // non-selected and non-matched cards
+    cards.map((card) => {
+      !card.isSelected &&
+        !card.isMatched &&
+        card.node.classList.toggle('disabled');
+    });
 
-    cardsSelected = [];
+    // Get the indexes of the selected cards
+    const selected = cards.filter((card) => card.isSelected == true);
+    const index1 = cards.indexOf(selected[0]);
+    const index2 = cards.indexOf(selected[1]);
+
+    await new Promise((resolve, reject) => {
+      // Check if the selected cards have the same icon
+      if (cards[index1].iconName !== cards[index2].iconName) {
+        // Flip back the cards after half a second
+        setTimeout(() => {
+          resolve(cards[index1].node.classList.toggle('flip-card'));
+          resolve(cards[index2].node.classList.toggle('flip-card'));
+        }, 500);
+      } else {
+        // Mark the cards as matched
+        resolve((cards[index1].isMatched = true));
+        resolve(cards[index1].node.classList.add('matched'));
+        resolve((cards[index2].isMatched = true));
+        resolve(cards[index2].node.classList.add('matched'));
+        // Increase a point
+        resolve(points++);
+      }
+    });
+    // Mark the cards as non-selected
+    cards[index1].isSelected = false;
+    cards[index2].isSelected = false;
+
+    // Enable all pointer events of all the non-matched cards
+    cards.map((card) => {
+      !card.isMatched && card.node.classList.toggle('disabled');
+    });
+
+    // If the points are equal to 8, end the game
+    // because all the cards are matched | (16/2 = 8)
     points == 8 && stopGame();
   }
 }
 
 function deleteCards() {
   deck.textContent = '';
+  cards = [];
 }
 
 function startTimer() {
@@ -115,23 +162,29 @@ function startTimer() {
       hours++;
       minutes = 0;
     }
-    timerSeconds.textContent = seconds;
-    timerMinutes.textContent = minutes;
-    timerHours.textContent = hours;
+    secondsLbl.textContent = seconds;
+    minutesLbl.textContent = minutes;
+    hoursLbl.textContent = hours;
   }, 1000);
 }
 
 function restartTimer() {
+  stopTimer();
+  secondsLbl.textContent = 0;
+  minutesLbl.textContent = 0;
+  hoursLbl.textContent = 0;
+}
+
+function stopTimer() {
   clearInterval(timerInterval);
-  timerSeconds.textContent = 0;
-  timerMinutes.textContent = 0;
-  timerHours.textContent = 0;
 }
 
 function restartMoves() {
   cardsSelectedCounter = 0;
   moves = 0;
-  movesCounter.textContent = moves;
+  movesLbl.textContent = moves;
 }
 
-function stopGame() {}
+function stopGame() {
+  stopTimer();
+}
