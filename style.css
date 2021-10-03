@@ -29,7 +29,7 @@ header {
   flex-direction: column;
 }
 
-header h1 {
+h1 {
   font-size: 48px;
   margin-bottom: 25px;
 }
@@ -63,7 +63,7 @@ header .panel {
 #reset-button {
   border: none;
   outline: none;
-  border-radius: 10px;
+  border-radius: 30px;
   padding: 10px;
   background-color: white;
   color: #2c3e50;
@@ -74,7 +74,7 @@ header .panel {
 
 #reset-button:hover {
   transform: scale(1.2);
-  background-color: #81ecec;
+  background-color: #74b9ff;
   color: #fff;
 }
 
@@ -128,7 +128,7 @@ main #deck {
 }
 
 #deck .card.flip-card {
-  transform: rotateY(180deg);
+  transform: rotateY(-180deg);
   background-color: #a29bfe;
   font-size: 50px;
   backface-visibility: visible;
@@ -141,6 +141,18 @@ main #deck {
 
 #deck .card.matched {
   background-color: #00cec9;
+}
+
+#deck .card.not-matched {
+  animation: not-match 0.6s ease-out normal backwards;
+}
+
+@keyframes not-match {
+  to {
+    background-color: #d63031;
+    transform: scale(2);
+    opacity: 1;
+  }
 }
 
 #deck .card:nth-of-type(1) {
@@ -205,4 +217,104 @@ main #deck {
 
 #deck .card:nth-of-type(16) {
   animation-delay: 1.6s;
+}
+
+#you-rock-dialog {
+  width: 500px;
+  height: fit-content;
+  margin: auto;
+  padding: 32px;
+  border: none;
+  border-radius: 10px;
+  color: #2c3e50;
+}
+
+#you-rock-dialog::backdrop {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+#you-rock-dialog h1,
+h2,
+#try-again-button {
+  display: block;
+}
+
+#you-rock-dialog h1,
+h2 {
+  text-align: center;
+}
+
+#try-again-button {
+  border: none;
+  outline: none;
+  border-radius: 5px;
+  margin: 32px auto auto auto;
+  padding: 10px;
+  background-color: #e84393;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  transition: all 0.4s ease;
+}
+
+#try-again-button:hover {
+  transform: scale(1.1);
+}
+
+/* RESPONSIVENESS */
+
+@media (max-width: 992px) {
+  h1 {
+    font-size: 36px;
+    margin-bottom: 12px;
+  }
+
+  .panel .score,
+  .moves-counter,
+  .timer {
+    margin-right: 15px;
+  }
+
+  .score li {
+    font-size: 15px;
+  }
+
+  /* .score li i {
+    font-size: 10px;
+  } */
+
+  #reset-button {
+    border-radius: 10px;
+    padding: 5px;
+    font-size: 15px;
+  }
+
+  #deck .card {
+    padding: 5px;
+    height: 4.5rem;
+    width: 4.5rem;
+    margin: 0.1rem 0.1rem;
+    border-radius: 10px;
+  }
+
+  main {
+    border-radius: 10px;
+    width: 38%;
+    margin-top: 10px;
+  }
+
+  main #deck {
+    padding: 5px;
+  }
+
+  #you-rock-dialog {
+    width: 300px;
+    height: 150px;
+    border-radius: 5px;
+    font-size: 10px;
+  }
+
+  #you-rock-dialog h1 {
+    font-size: 25px;
+  }
 }
