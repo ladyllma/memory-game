@@ -203,6 +203,8 @@ function stopTimer() {
 function restartMoves() {
   cardsSelectedCounter = 0;
   game.moves = 0;
+  game.score = 0;
+  game.points = 0;
   movesLbl.textContent = game.moves;
 }
 
