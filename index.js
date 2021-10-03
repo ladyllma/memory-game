@@ -205,7 +205,8 @@ function restartMoves() {
   game.moves = 0;
   game.score = 0;
   game.points = 0;
-  movesLbl.textContent = game.moves;
+  movesLbl.textContent = 0;
+  scoreLbl.textContent = 0;
 }
 
 function stopGame() {
